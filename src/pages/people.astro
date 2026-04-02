@@ -1,0 +1,123 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { categoryLabels, categoryOrder, members, teamStats } from '../data/members';
+import { withBase } from '../utils/site';
+
+const featuredMember = members.find((member) => member.featured);
+const groupedMembers = categoryOrder
+	.map((category) => ({
+		category,
+		label: categoryLabels[category],
+		members: members.filter((member) => member.category === category),
+	}))
+	.filter((group) => group.members.length > 0);
+
+const publicLinks = (member: (typeof members)[number]) =>
+	[
+		member.github && { label: 'GitHub', href: member.github },
+		member.linkedin && { label: 'LinkedIn', href: member.linkedin },
+	]
+		.filter(Boolean)
+		.map((item) => item as { label: string; href: string });
+---
+
+<Layout
+	title="Menden Lab | People"
+	description="Team overview for the Menden Lab website prototype."
+>
+	<h1 class="page-title">People</h1>
+
+	<div class="people-page-background">
+		<section class="stats-grid" aria-label="Team composition">
+			{
+				teamStats.map((stat) => (
+					<article class="content-card stat-card">
+						<strong>{stat.value}</strong>
+						<p>{stat.label}</p>
+					</article>
+				))
+			}
+		</section>
+
+		{
+			featuredMember && (
+				<section class="content-card" style="margin-top: 24px;">
+					<div class="profile-hero">
+						<div class="avatar profile-avatar">
+							{
+								featuredMember.photo ? (
+									<img src={withBase(featuredMember.photo)} alt={featuredMember.name} />
+								) : (
+									featuredMember.initials
+								)
+							}
+						</div>
+						<div>
+							<p class="eyebrow">Principal Investigator</p>
+							<h2>{featuredMember.name}</h2>
+							<p>{featuredMember.researchInterest}</p>
+							{featuredMember.affiliation && (
+								<p class="member-affiliation">{featuredMember.affiliation}</p>
+							)}
+							<div class="member-links" style="margin-top: 16px;">
+								<a href={withBase(`/people/${featuredMember.slug}`)}>View full profile</a>
+								{
+									publicLinks(featuredMember).map((link) => (
+										<a href={link.href} target="_blank" rel="noreferrer">
+											{link.label}
+										</a>
+									))
+								}
+							</div>
+						</div>
+					</div>
+				</section>
+			)
+		}
+
+		{
+			groupedMembers.map((group) => (
+				<section class="member-section" aria-label={group.label}>
+					<h2 class="section-heading">{group.label}</h2>
+					<div class="member-grid">
+						{
+							group.members.map((member) => (
+								<article class="content-card member-card">
+									<div class="member-top">
+										<div class="avatar">
+											{
+												member.photo ? (
+													<img src={withBase(member.photo)} alt={member.name} />
+												) : (
+													member.initials
+												)
+											}
+										</div>
+										<div class="member-meta">
+											<h2>{member.name}</h2>
+											<p>{member.role}</p>
+											{member.affiliation && (
+												<p class="member-affiliation">{member.affiliation}</p>
+											)}
+										</div>
+									</div>
+									<p class="member-summary">{member.researchInterest}</p>
+									<div class="member-links">
+										<a href={withBase(`/people/${member.slug}`)}>Profile page</a>
+										{
+											publicLinks(member).map((link) => (
+												<a href={link.href} target="_blank" rel="noreferrer">
+													{link.label}
+												</a>
+											))
+										}
+									</div>
+								</article>
+							))
+						}
+					</div>
+				</section>
+			))
+		}
+	</div>
+</Layout>

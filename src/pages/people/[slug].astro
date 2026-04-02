@@ -1,0 +1,130 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import { hasPublicLinks, members } from '../../data/members';
+import { withBase } from '../../utils/site';
+
+export function getStaticPaths() {
+	return members.map((member) => ({
+		params: { slug: member.slug },
+		props: { member },
+	}));
+}
+
+const { member } = Astro.props;
+const isMichael = member.slug === 'michael-menden';
+const publicLinks = [
+	member.github && { label: 'GitHub', href: member.github },
+	member.linkedin && { label: 'LinkedIn', href: member.linkedin },
+	member.email && { label: 'Email', href: `mailto:${member.email}` },
+	...(member.links ?? []),
+].filter(Boolean) as { label: string; href: string }[];
+---
+
+<Layout
+	title={`Menden Lab | ${member.name}`}
+	description={`${member.name} profile page for the Menden Lab website.`}
+>
+	<section class="profile-layout">
+		<article class="hero-card section-stack">
+			<div class="profile-hero">
+				<div class="avatar profile-avatar">
+					{
+						member.photo ? (
+							<img src={withBase(member.photo)} alt={member.name} />
+						) : (
+							member.initials
+						)
+					}
+				</div>
+				<div>
+					<p class="eyebrow">{member.role}</p>
+					<h1 style="margin-top: 0.5rem;">{member.name}</h1>
+					<p class="lead" style="max-width: 58ch;">{member.researchInterest}</p>
+					{member.affiliation && <p class="member-affiliation">{member.affiliation}</p>}
+				</div>
+			</div>
+			<div class="member-links">
+				{
+					publicLinks.map((link) => (
+						<a
+							href={link.href}
+							target={link.href.startsWith('http') ? '_blank' : undefined}
+							rel={link.href.startsWith('http') ? 'noreferrer' : undefined}
+						>
+							{link.label}
+						</a>
+					))
+				}
+				<a href={withBase('/people')}>Back to people</a>
+			</div>
+			{member.bio && <p class="placeholder-note">{member.bio}</p>}
+		</article>
+
+		<aside class="section-stack">
+			{
+				isMichael ? (
+					<>
+						<article class="content-card compact-list">
+							<h2>Current Appointments</h2>
+							<ul>
+								<li>Associate Professor in Biochemistry and Pharmacology at the University of Melbourne</li>
+								<li>Jointly appointed Principal Investigator at Helmholtz Munich, Institute of Computational Biology</li>
+								<li>Computational biomedical researcher working across AI, biostatistics, and translational pharmacogenomics</li>
+							</ul>
+						</article>
+						<article class="content-card compact-list">
+							<h2>Selected Highlights</h2>
+							<ul>
+								<li>ERC Starting Grant Laureate in 2020</li>
+								<li>Rising Star in Drug Discovery Award from Cardiff University in 2022</li>
+								<li>Previously Senior Scientist in Oncology Bioinformatics at AstraZeneca</li>
+								<li>PhD in Computational Biology, University of Cambridge, awarded in 2016</li>
+							</ul>
+						</article>
+						<article class="content-card compact-list">
+							<h2>Research Direction</h2>
+							<p>
+								Michael's current programme focuses on translational computational pharmacogenomics,
+								digital twins, generative AI, and clinically informed patient stratification. Public
+								University of Melbourne materials emphasise his interest in combining deep molecular
+								and clinical data with disease-specific knowledge to improve drug discovery and
+								next-generation precision medicine.
+							</p>
+						</article>
+					</>
+				) : (
+					<>
+						<article class="content-card compact-list">
+							<h2>Profile Status</h2>
+							<ul>
+								<li>This template already supports optional portraits, affiliations, email, and public links</li>
+								<li>Placeholder entries now hide missing GitHub and LinkedIn links automatically</li>
+								<li>The short summary appears at the top of the page and the longer note sits below it</li>
+							</ul>
+						</article>
+						<article class="content-card compact-list">
+							<h2>Useful Additions Later</h2>
+							<ul>
+								<li>Email or ORCID</li>
+								<li>Selected publication or preprint</li>
+								<li>One key project or dataset</li>
+								<li>Office location or affiliation</li>
+							</ul>
+						</article>
+						{
+							!hasPublicLinks(member) && (
+								<article class="content-card compact-list">
+									<h2>Public Links</h2>
+									<p>
+										This profile currently has no public external links configured. Add them later in
+										<code>src/data/members.ts</code> when you want them visible.
+									</p>
+								</article>
+							)
+						}
+					</>
+				)
+			}
+		</aside>
+	</section>
+</Layout>

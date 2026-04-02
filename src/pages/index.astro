@@ -1,11 +1,115 @@
 ---
-import Welcome from '../components/Welcome.astro';
 import Layout from '../layouts/Layout.astro';
+import { members } from '../data/members';
+import { withBase } from '../utils/site';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const showcasePeople = [...members, ...members];
+const linkedinPostModules = import.meta.glob('../content/linkedin-posts/*.json', {
+	eager: true,
+	import: 'default',
+});
+const linkedinPosts = Object.values(linkedinPostModules)
+	.filter((entry) => !entry.draft)
+	.sort(
+		(a, b) =>
+			new Date(b.date ?? '1970-01-01').getTime() - new Date(a.date ?? '1970-01-01').getTime(),
+	)
+	.slice(0, 5);
+const showcasePosts = linkedinPosts.length > 1 ? [...linkedinPosts, ...linkedinPosts] : linkedinPosts;
+const formatPostMonth = (value: string) => value?.slice(0, 7) ?? '';
 ---
 
-<Layout>
-	<Welcome />
+<Layout
+	title="Menden Lab | Home"
+	description="Computational biomedicine, pharmacogenomics, and precision medicine at the Menden Lab."
+>
+	<section class="hero-card">
+		<div class="hero-split">
+			<div>
+				<p class="eyebrow">Computational Biomedicine</p>
+				<h1 class="headline">Machine learning and biostatistics for precision medicine.</h1>
+				<p class="lead">
+					The Menden Lab develops biostatistical and machine learning frameworks for biomedical
+					data to understand complex disease, identify intervention strategies, and support
+					translational drug discovery. The lab's work spans computational cancer
+					pharmacogenomics and a broader translational programme across tuberculosis,
+					inflammatory skin disease, neurodegeneration, and diabetes.
+				</p>
+				<div class="cta-row">
+					<a class="button-link primary" href={withBase('/research')}>Explore research themes</a>
+					<a class="button-link secondary" href={withBase('/people')}>Meet the team</a>
+				</div>
+			</div>
+			<aside class="hero-panel hero-photo-panel">
+				<img
+					class="hero-photo-image"
+					src={withBase('/people/Group_photo_01.JPG')}
+					alt="Menden Lab group photo"
+				/>
+			</aside>
+		</div>
+	</section>
+
+	<section class="hero-card people-showcase compact">
+		<div class="showcase-head compact-head">
+			<h2>People</h2>
+		</div>
+		<div class="showcase-track" aria-label="Featured people">
+			{
+				showcasePeople.map((member) => (
+					<a class="content-card showcase-card" href={withBase(`/people/${member.slug}`)}>
+						<div class="avatar">
+							{
+								member.photo ? (
+									<img src={withBase(member.photo)} alt={member.name} />
+								) : (
+									member.initials
+								)
+							}
+						</div>
+						<div class="showcase-copy">
+							<h3>{member.name}</h3>
+							<p>{member.researchInterest}</p>
+						</div>
+					</a>
+				))
+			}
+		</div>
+	</section>
+
+	{
+		showcasePosts.length ? (
+			<section class="hero-card people-showcase compact post-showcase">
+				<div class="showcase-head compact-head">
+					<h2>News</h2>
+				</div>
+				<div class="showcase-track post-track" aria-label="Latest LinkedIn posts">
+					{
+						showcasePosts.map((post) => (
+							<a class="content-card showcase-card post-card" href={post.link} target="_blank" rel="noreferrer">
+								{
+									post.image ? (
+										<img
+											class="post-card-image"
+											src={withBase(post.image)}
+											alt={post.title}
+										/>
+									) : null
+								}
+								<div class="showcase-copy post-copy">
+									<p class="showcase-meta">{formatPostMonth(post.date)}</p>
+									<h3>{post.title}</h3>
+									<p>{post.excerpt}</p>
+								</div>
+							</a>
+						))
+					}
+				</div>
+			</section>
+		) : null
+	}
+	<p class="source-note">
+		Content on this page is adapted from the public Menden Lab pages at Helmholtz Munich and the
+		`MendenLab` GitHub organisation, then condensed for a lab-homepage format.
+	</p>
 </Layout>

@@ -1,0 +1,49 @@
+---
+import Layout from '../layouts/Layout.astro';
+import { members } from '../data/members';
+import { withBase } from '../utils/site';
+
+const featuredMember = members.find((member) => member.slug === 'michael-menden');
+---
+
+<Layout
+	title="Menden Lab | Contact"
+	description="Contact page for the Menden Lab website prototype."
+>
+	<h1 class="page-title">Contact</h1>
+
+	<section class="grid-two">
+		<article class="content-card compact-list">
+			<h2>Research Opportunities</h2>
+			<p>
+				This research project is available to PhD students, Masters by Research, Honours
+				students, Master of Biomedical Science, and Postdoctoral Researchers to join as part of
+				their thesis.
+			</p>
+			<p>Please contact the Research Group Leader to discuss your options.</p>
+		</article>
+		{
+			featuredMember && (
+				<article class="content-card contact-card">
+					<div class="avatar">
+						{
+							featuredMember.photo ? (
+								<img src={withBase(featuredMember.photo)} alt={featuredMember.name} />
+							) : (
+								featuredMember.initials
+							)
+						}
+					</div>
+					<div>
+						<h2>{featuredMember.name}</h2>
+						<p class="contact-role">Group Leader</p>
+						<div class="contact-link-list">
+							<a href="mailto:michael.menden@unimelb.edu.au">michael.menden@unimelb.edu.au</a>
+							<a href={withBase(`/people/${featuredMember.slug}`)}>View profile</a>
+						</div>
+					</div>
+				</article>
+			)
+		}
+	</section>
+</Layout>

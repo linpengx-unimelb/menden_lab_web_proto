@@ -1,0 +1,8 @@
+{
+  "title": "TwinWeaver for Multi-Modal EHR and Digital Twins",
+  "date": "2026-02-08",
+  "link": "https://www.linkedin.com/posts/michael-menden-00366647_excited-to-unveil-%F0%9D%97%A7%F0%9D%98%84%F0%9D%97%B6%F0%9D%97%BB%F0%9D%97%AA%F0%9D%97%B2%F0%9D%97%AE%F0%9D%98%83%F0%9D%97%B2%F0%9D%97%BF-a-activity-7425011841627668480-cgNH?utm_source=share&utm_medium=member_desktop&rcm=ACoAAE6VwysBgbD9oIp7_7Ih_yqNlmxz6brQljI",
+  "image": "/linkedin-posts/20260208.jpg",
+  "excerpt": "Excited to share our work on TwinWeaver, an open-source framework bringing the generative power of LLMs to sparse, multi-modal EHR data and digital twins in healthcare. We are currently benchmarking TwinWeaver in a Melbourne hackathon and exploring performance and real-world use cases. By serializing longitudinal patient histories into text, we trained a pan-cancer foundation model built on data from over 93,000 patients. The framework supports forecasting of lab values and key clinical outcomes, generalizes zero-shot to out-of-distribution clinical trials, and generates transparent, clinically aligned reasoning chains for hypothesis generation. We additionally integrate with MEDS with minimal extra requirements. Many thanks to collaborators at Roche and Helmholtz Munich, and to Nikita Makarov for facilitating the hackathon.",
+  "draft": false
+}

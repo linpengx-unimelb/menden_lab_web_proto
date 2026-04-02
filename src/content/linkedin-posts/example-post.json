@@ -1,0 +1,8 @@
+{
+  "title": "Example LinkedIn post title",
+  "date": "2026-04-01",
+  "link": "https://www.linkedin.com/in/michael-menden-00366647/",
+  "image": "/linkedin-posts/example-image.jpg",
+  "excerpt": "Paste the LinkedIn post text here. Keep the most important first few sentences, because the homepage card will automatically trim the rest.",
+  "draft": true
+}
