@@ -98,6 +98,8 @@ Important note:
 
 - this site is configured as a GitHub Pages project site, not a user root site
 - internal links and static assets already use the correct repository base path
+- after a fresh deploy, GitHub Pages can take a few minutes to refresh and your browser may still show an older cached version
+- if a page looks wrong right after deployment, open the root site URL again in a new tab or use a hard refresh before assuming the build failed
 
 ## Sync Publications
 
@@ -169,6 +171,20 @@ This is the main summary of what was updated during today's work session.
 - `src/pages/people/[slug].astro`: individual member profile pages
 - `scripts/sync-publications.mjs`: publication sync script
 
+## GitHub Pages Path Rule
+
+This project is deployed under:
+
+- `/menden_lab_web_proto/`
+
+Because of that, when you edit page code:
+
+- use `withBase('/research')`, `withBase('/people')`, and similar helpers for internal links
+- use `withBase('/people/photo.jpg')` or `withBase('/linkedin-posts/file.jpg')` for local images from `public/`
+- do not hardcode links like `/research` or `/people/photo.jpg` directly inside page templates unless they are wrapped with `withBase`
+
+The helper is defined in `src/utils/site.ts`. It prevents broken links and missing images on GitHub Pages.
+
 ## Content Workflow
 
 - Update member information in `src/data/members.ts`
@@ -214,6 +230,10 @@ Recommended maintenance workflow:
 6. Run `npm run build`
 
 If you later need to change the order of news cards, only update the `date` field in the JSON file. Do not change the image path unless the image file name also changes.
+
+Important note:
+
+- these `News` cards are manual content entries and can include Michael's own LinkedIn posts or lab-related posts by collaborators, journals, or conference accounts
 
 ## Maintain Publications
 
