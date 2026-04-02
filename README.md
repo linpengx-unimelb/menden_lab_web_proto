@@ -55,6 +55,45 @@ To publish:
 3. In the GitHub repository settings, enable GitHub Pages with `GitHub Actions`
 4. The workflow in `.github/workflows/deploy-pages.yml` will build and publish the site automatically
 
+After later updates:
+
+1. Make your local content or code changes
+2. Run `npm run build`
+3. Commit and push:
+
+```powershell
+git add .
+git commit -m "describe your update"
+git push
+```
+
+4. GitHub Actions will automatically rebuild and redeploy the site
+
+## Temporarily Unpublish The Site
+
+If the website is not ready and you want to take it down for now, the simplest options are:
+
+Option 1: Disable GitHub Pages
+
+1. Open the repository on GitHub
+2. Go to `Settings`
+3. Go to `Pages`
+4. Change `Source` from `GitHub Actions` to `Deploy from a branch`
+5. Set the branch selector to `None`
+6. Save
+
+Option 2: Make the repository private again
+
+1. Go to `Settings`
+2. Open `General`
+3. Scroll to `Danger Zone`
+4. Change repository visibility to `Private`
+
+Important note:
+
+- on your current GitHub plan, making the repository private will also disable public GitHub Pages access
+- when you want the site back online, switch the repository to `Public` again and set `Pages` back to `GitHub Actions`
+
 Important note:
 
 - this site is configured as a GitHub Pages project site, not a user root site
@@ -100,6 +139,7 @@ Notes:
 - The workflow uses `npm ci`, `npm run sync:publications`, and `npm run build`
 - Google Scholar, PubMed, and OpenAlex metadata can differ slightly, so some abstracts may still be unavailable
 - A few names may contain encoding artifacts from external metadata sources and may need occasional manual cleanup
+- the workflow files include `FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true` so GitHub Actions can avoid the old Node 20 deprecation path
 
 ## 2026-04-02 Update Log
 
